@@ -1,406 +1,195 @@
-# Camera Capture → PDF → Email Automation
+# 📷 Raspberry Pi Automated Camera Capture & PDF Email System
 
-A Python automation project that captures images from a webcam at a fixed time interval, combines the captured images into a single PDF, and sends the PDF as an email attachment using Gmail SMTP.
+An automated image-capture and document-delivery system built using a **Raspberry Pi Zero W**, **Raspberry Pi Camera**, and **Raspberry Pi OS**.
 
-This project is designed to be simple to set up and can be adapted for applications such as automatic document capture, monitoring, note collection, and image-to-PDF workflows.
+The system periodically captures images using the Raspberry Pi camera, stores the captured images, combines them into a PDF document, and automatically sends the generated PDF to a specified email address.
 
----
-
-## 📌 Features
-
-* 📷 Capture images using a webcam
-* ⏱️ Capture images automatically at a configurable interval
-* 💾 Save captured images locally
-* 📄 Combine captured images into a single PDF
-* 📧 Send the generated PDF through Gmail
-* 🔐 Keep email credentials outside the source code
-* ⚙️ Configure the application using environment variables
-* 🖥️ Works on Windows, macOS, and Linux with Python and a compatible webcam
+The Raspberry Pi Zero W provides built-in Wi-Fi connectivity, allowing the system to connect to the internet and perform the entire workflow without requiring a separate computer or wired network connection.
 
 ---
 
-# 🔄 How the Program Works
+## ✨ Features
 
-The program follows this workflow:
-
-```text
-             ┌──────────────┐
-             │    Webcam    │
-             └──────┬───────┘
-                    │
-                    ▼
-          ┌───────────────────┐
-          │  Capture Images   │
-          │  at Fixed Interval│
-          └─────────┬─────────┘
-                    │
-                    ▼
-             ┌─────────────┐
-             │  captures/  │
-             └──────┬──────┘
-                    │
-                    ▼
-          ┌───────────────────┐
-          │   Create PDF      │
-          └─────────┬─────────┘
-                    │
-                    ▼
-             ┌─────────────┐
-             │   output/   │
-             │  notes.pdf  │
-             └──────┬──────┘
-                    │
-                    ▼
-          ┌───────────────────┐
-          │    Gmail SMTP     │
-          └─────────┬─────────┘
-                    │
-                    ▼
-             ┌─────────────┐
-             │  Recipient  │
-             └─────────────┘
-```
-
-The application has three main stages:
-
-1. **Image Capture**
-2. **PDF Generation**
-3. **Email Delivery**
+* 📷 Automated image capture using a Raspberry Pi camera
+* 🍓 Designed for **Raspberry Pi Zero W**
+* 🐧 Runs on **Raspberry Pi OS**
+* 📶 Uses the Raspberry Pi Zero W's built-in Wi-Fi
+* ⏱️ Configurable image-capture interval
+* 💾 Automatically stores captured images
+* 📄 Converts captured images into a single PDF
+* 📧 Automatically sends the PDF through Gmail
+* 🔐 Email credentials are kept outside the source code
+* 🤖 Minimal user interaction after the system is configured
 
 ---
 
-# 🛠️ Requirements
+# 🧠 System Overview
 
-Before installing the project, make sure you have:
+The system is designed to work as an automated pipeline:
 
-* Python **3.10 or newer**
-* A working webcam
-* Internet connection for sending email
-* A Gmail account
-* A Gmail **App Password**
+```text
+                    ┌──────────────────────┐
+                    │   Raspberry Pi Zero W │
+                    │                      │
+                    │    Raspberry Pi OS   │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │   Raspberry Pi       │
+                    │      Camera          │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │   Capture Images      │
+                    │  at Fixed Intervals   │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │      Local Storage    │
+                    │       captures/       │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │    PDF Generation    │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │      notes.pdf       │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │      Raspberry Pi     │
+                    │      Wi-Fi Module     │
+                    └──────────┬───────────┘
+                               │
+                            Internet
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │     Gmail SMTP       │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │   Email Recipient    │
+                    └──────────────────────┘
+```
 
-> You should not use your normal Gmail password for SMTP authentication.
+Once configured, the Raspberry Pi handles the complete workflow.
 
 ---
 
-# 📥 Installation
+# 🧰 Hardware Used
 
-## 1. Clone the Repository
-
-Open PowerShell, Terminal, or Command Prompt and run:
-
-```bash
-git clone https://github.com/YOUR_USERNAME/camera-capture-pdf-email.git
-```
-
-Then enter the project directory:
-
-```bash
-cd camera-capture-pdf-email
-```
+| Component                       | Purpose                                    |
+| ------------------------------- | ------------------------------------------ |
+| **Raspberry Pi Zero W**         | Main computing unit and Wi-Fi connectivity |
+| **Raspberry Pi Camera**         | Captures images                            |
+| **MicroSD Card**                | Raspberry Pi OS and local storage          |
+| **Wi-Fi / Internet connection** | Provides network access for email delivery |
+| **Power supply**                | Powers the Raspberry Pi                    |
 
 ---
 
-## 2. Create a Virtual Environment
+# 💻 Software Used
 
-Using a virtual environment keeps the project's Python packages separate from your system Python installation.
+* **Raspberry Pi OS**
+* **Python 3**
+* **OpenCV**
+* **img2pdf**
+* **Gmail SMTP**
+* Python standard libraries:
 
-### Windows
-
-```powershell
-python -m venv .venv
-```
-
-Activate it:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-If PowerShell blocks script execution, you can use Command Prompt instead:
-
-```cmd
-.venv\Scripts\activate
-```
-
-### macOS / Linux
-
-```bash
-python3 -m venv .venv
-```
-
-Activate it:
-
-```bash
-source .venv/bin/activate
-```
-
-After activation, your terminal should show something similar to:
-
-```text
-(.venv)
-```
+  * `os`
+  * `time`
+  * `smtplib`
+  * `email`
+  * `pathlib`
 
 ---
 
-# 📦 3. Install Dependencies
+# 🔄 How It Works
 
-With the virtual environment activated, run:
+The application consists of three main stages.
 
-```bash
-pip install -r requirements.txt
-```
+## 1. Image Capture
 
-The project requires:
+The Raspberry Pi accesses the connected camera and continuously displays the camera feed.
 
-```text
-opencv-python
-img2pdf
-```
-
-### What these packages do
-
-| Package         | Purpose                                 |
-| --------------- | --------------------------------------- |
-| `opencv-python` | Accesses the webcam and captures images |
-| `img2pdf`       | Converts the captured images into a PDF |
-
----
-
-# 📧 Gmail Setup
-
-The application uses Gmail's SMTP server to send the generated PDF.
-
-## 4. Create a Gmail App Password
-
-You need a Gmail **App Password**.
-
-An App Password is different from your normal Gmail password and should be used specifically for applications such as this.
-
-Make sure your Google account has **2-Step Verification enabled**.
-
-Then create an App Password through your Google Account security settings.
-
-Google will provide a password similar to:
-
-```text
-abcd efgh ijkl mnop
-```
-
-Keep this password private.
-
-### ⚠️ Security Warning
-
-**Never put your Gmail password or App Password directly inside `main.py`.**
-
-Do not upload it to GitHub.
-
-Do not put it in:
-
-```text
-README.md
-main.py
-.env.example
-```
-
----
-
-# 🔐 5. Configure Email Credentials
-
-Create a file named:
-
-```text
-.env
-```
-
-in the root of the project.
-
-Your project should look like:
-
-```text
-camera-capture-pdf-email/
-│
-├── main.py
-├── requirements.txt
-├── README.md
-├── .gitignore
-├── .env.example
-└── .env
-```
-
-Your `.env` file should contain:
-
-```text
-SENDER_EMAIL=your_sender@gmail.com
-RECEIVER_EMAIL=recipient@gmail.com
-EMAIL_PASSWORD=your_gmail_app_password
-```
-
-For example:
-
-```text
-SENDER_EMAIL=myemail@gmail.com
-RECEIVER_EMAIL=receiver@gmail.com
-EMAIL_PASSWORD=abcdefghijklmnop
-```
-
-Use your own credentials.
-
-### 🚨 Do NOT commit `.env`
-
-The `.gitignore` file should prevent `.env` from being uploaded to GitHub.
-
-Check before committing:
-
-```bash
-git status
-```
-
-Make sure `.env` does not appear as a file to be committed.
-
----
-
-# ⚙️ Configuration
-
-The program can be configured using environment variables.
-
-The available settings are:
-
-| Variable                   |               Default | Description                          |
-| -------------------------- | --------------------: | ------------------------------------ |
-| `CAPTURE_INTERVAL_SECONDS` |                 `300` | Time between image captures          |
-| `CAMERA_INDEX`             |                   `0` | Camera/webcam index                  |
-| `IMAGE_DIR`                |            `captures` | Directory where images are saved     |
-| `PDF_DIR`                  |              `output` | Directory where the PDF is saved     |
-| `PDF_FILENAME`             |           `notes.pdf` | Name of the generated PDF            |
-| `SENDER_EMAIL`             |                  None | Gmail address used to send the email |
-| `RECEIVER_EMAIL`           |                  None | Email address receiving the PDF      |
-| `EMAIL_PASSWORD`           |                  None | Gmail App Password                   |
-| `EMAIL_SUBJECT`            | `Captured Images PDF` | Email subject                        |
-| `EMAIL_BODY`               |      Built-in message | Email body                           |
-
----
-
-# 🧪 Recommended Test Configuration
-
-For your first test, you probably don't want to wait five minutes between photographs.
-
-Use:
-
-```text
-CAPTURE_INTERVAL_SECONDS=5
-```
-
-This means the program will capture an image approximately every **5 seconds**.
-
-Once everything works, change it back to:
-
-```text
-CAPTURE_INTERVAL_SECONDS=300
-```
-
-which is approximately **5 minutes**.
-
----
-
-# 📷 Camera Configuration
-
-By default, the program uses:
-
-```text
-CAMERA_INDEX=0
-```
-
-This normally corresponds to the computer's default webcam.
-
-If you have multiple cameras, try:
-
-```text
-CAMERA_INDEX=1
-```
-
-or:
-
-```text
-CAMERA_INDEX=2
-```
-
-depending on which camera you want to use.
-
----
-
-# ▶️ Running the Program
-
-Once installation and configuration are complete, activate your virtual environment and run:
-
-```bash
-python main.py
-```
-
-The program will display a camera window.
-
-You should see a message similar to:
-
-```text
-============================================================
-Camera Capture Started
-============================================================
-Capture interval: 5 seconds
-Press 'q' to stop.
-```
-
-The webcam feed will remain visible while the program is running.
-
----
-
-# ⏹️ Stopping the Program
-
-To stop image capture:
-
-**Press `q` while the camera window is active.**
-
-The program will then:
-
-1. Stop the webcam
-2. Release the camera
-3. Search for captured images
-4. Create the PDF
-5. Send the PDF by email
-
----
-
-# 📁 Output Files
-
-During execution, captured images are stored in:
-
-```text
-captures/
-```
+At the configured interval, the program captures an image and saves it locally.
 
 For example:
 
 ```text
 captures/
 ├── capture_1756451234.png
-├── capture_1756451239.png
-├── capture_1756451244.png
+├── capture_1756451534.png
+├── capture_1756451834.png
 └── ...
 ```
 
-After capture is stopped, the images are combined into:
+The capture interval can be changed using:
+
+```text
+CAPTURE_INTERVAL_SECONDS
+```
+
+The default value is:
+
+```text
+300 seconds
+```
+
+which corresponds to approximately **5 minutes**.
+
+For testing, a shorter interval such as:
+
+```text
+CAPTURE_INTERVAL_SECONDS=5
+```
+
+can be used.
+
+---
+
+# 📄 2. PDF Generation
+
+After image capture is stopped, the program searches the image directory for:
+
+```text
+.png
+.jpg
+.jpeg
+```
+
+files.
+
+The images are then combined into a single PDF using `img2pdf`.
+
+The generated PDF is stored in:
+
+```text
+output/
+```
+
+For example:
 
 ```text
 output/
 └── notes.pdf
 ```
 
-The generated PDF is then attached to the email.
-
 ---
 
-# 📧 Email Workflow
+# 📧 3. Automatic Email Delivery
 
-After the PDF is created, the program connects to:
+After the PDF has been generated, the program connects to Gmail's SMTP server:
 
 ```text
 smtp.gmail.com
@@ -412,11 +201,11 @@ using port:
 587
 ```
 
-The connection uses TLS encryption.
+The connection uses TLS.
 
-The generated PDF is then sent to the configured recipient.
+The generated PDF is attached to an email and sent to the configured recipient.
 
-A successful run will display:
+A successful operation produces:
 
 ```text
 Email sent successfully.
@@ -424,30 +213,176 @@ Email sent successfully.
 
 ---
 
-# 🧩 Complete Example
+# 📶 Why Raspberry Pi Zero W?
 
-A typical `.env` configuration could look like:
+The Raspberry Pi Zero W was used as the core of this project because it provides a compact computing platform with built-in wireless connectivity.
+
+The integrated Wi-Fi allows the system to connect to an existing internet connection without requiring:
+
+* Ethernet
+* A separate Wi-Fi adapter
+* A continuously connected desktop computer
+
+This makes the system suitable for an **automated, standalone setup**.
+
+Once the Raspberry Pi is configured and connected to Wi-Fi, the image-processing and email workflow can be performed directly on the device.
+
+---
+
+# ⚙️ Configuration
+
+The program uses environment variables for configuration.
+
+| Variable                   |               Default | Description                        |
+| -------------------------- | --------------------: | ---------------------------------- |
+| `CAPTURE_INTERVAL_SECONDS` |                 `300` | Time between image captures        |
+| `CAMERA_INDEX`             |                   `0` | Camera index                       |
+| `IMAGE_DIR`                |            `captures` | Image storage directory            |
+| `PDF_DIR`                  |              `output` | PDF storage directory              |
+| `PDF_FILENAME`             |           `notes.pdf` | Generated PDF filename             |
+| `SENDER_EMAIL`             |                  None | Email account used to send the PDF |
+| `RECEIVER_EMAIL`           |                  None | Email recipient                    |
+| `EMAIL_PASSWORD`           |                  None | Gmail App Password                 |
+| `EMAIL_SUBJECT`            | `Captured Images PDF` | Email subject                      |
+| `EMAIL_BODY`               |       Default message | Email body                         |
+
+---
+
+# 🔐 Gmail Configuration
+
+The email functionality requires a Gmail account.
+
+For authentication, use a **Gmail App Password** rather than your normal Gmail password.
+
+Your credentials should be supplied through environment variables:
 
 ```text
 SENDER_EMAIL=your_email@gmail.com
-RECEIVER_EMAIL=destination@gmail.com
-EMAIL_PASSWORD=your_app_password
-
-CAPTURE_INTERVAL_SECONDS=5
-CAMERA_INDEX=0
-
-IMAGE_DIR=captures
-PDF_DIR=output
-PDF_FILENAME=notes.pdf
-
-EMAIL_SUBJECT=Captured Images PDF
-EMAIL_BODY=Please find the captured images attached.
+RECEIVER_EMAIL=recipient@gmail.com
+EMAIL_PASSWORD=your_gmail_app_password
 ```
 
-Then simply run:
+### ⚠️ Security
+
+**Never place your Gmail password or App Password directly inside `main.py`.**
+
+Do not commit credentials to GitHub.
+
+The repository should contain only an example configuration such as:
+
+```text
+.env.example
+```
+
+with placeholder values.
+
+---
+
+# ▶️ Running the Program
+
+Once the Raspberry Pi and camera are configured, run:
 
 ```bash
 python main.py
+```
+
+The camera feed will open and the system will begin capturing images according to the configured interval.
+
+The program displays:
+
+```text
+============================================================
+Camera Capture Started
+============================================================
+Capture interval: 300 seconds
+Press 'q' to stop.
+```
+
+---
+
+# ⏹️ Stopping the Capture Process
+
+To stop the capture process, press:
+
+```text
+q
+```
+
+while the camera window is active.
+
+After stopping, the program automatically proceeds to:
+
+```text
+Image Capture
+      ↓
+PDF Generation
+      ↓
+Email Delivery
+```
+
+No separate PDF-generation or email command is required.
+
+---
+
+# 📁 Project Structure
+
+```text
+camera-capture-pdf-email/
+│
+├── main.py
+├── requirements.txt
+├── README.md
+├── .gitignore
+├── .env.example
+│
+├── captures/
+│   └── Captured images
+│
+└── output/
+    └── Generated PDF
+```
+
+The `captures/` and `output/` directories contain generated data and should normally be excluded from the Git repository.
+
+---
+
+# 🧪 Testing
+
+For initial testing, reduce the capture interval:
+
+```text
+CAPTURE_INTERVAL_SECONDS=5
+```
+
+Run:
+
+```bash
+python main.py
+```
+
+Allow several images to be captured.
+
+Press:
+
+```text
+q
+```
+
+The program should then:
+
+1. Stop the camera
+2. Find the captured images
+3. Generate `notes.pdf`
+4. Save the PDF in `output/`
+5. Connect to Gmail
+6. Send the PDF to the configured recipient
+
+Once the system has been tested successfully, the interval can be increased.
+
+For approximately five-minute intervals:
+
+```text
+CAPTURE_INTERVAL_SECONDS=300
 ```
 
 ---
@@ -456,13 +391,20 @@ python main.py
 
 ## Camera does not open
 
-If you see:
+If the program reports:
 
 ```text
 Could not open the camera.
 ```
 
-try changing:
+check:
+
+* The Raspberry Pi camera is properly connected.
+* The camera is enabled/configured in Raspberry Pi OS.
+* The correct camera interface is available.
+* No other program is currently using the camera.
+
+If multiple cameras are available, try changing:
 
 ```text
 CAMERA_INDEX=0
@@ -474,37 +416,37 @@ to:
 CAMERA_INDEX=1
 ```
 
-Also make sure another application such as Zoom, Teams, or a browser is not currently using the webcam.
-
 ---
 
-## No images are being captured
+## No images are captured
 
-Check:
+Check the value of:
 
 ```text
 CAPTURE_INTERVAL_SECONDS
 ```
 
-For testing, use:
+For testing:
 
 ```text
 CAPTURE_INTERVAL_SECONDS=5
 ```
 
-Also make sure the camera window is active.
+Also verify that the camera feed is working correctly.
 
 ---
 
-## PDF is not created
+## PDF is not generated
 
-If you see:
+If the program reports:
 
 ```text
 No captured images found.
 ```
 
-check that the `captures/` directory contains:
+check the `captures/` directory.
+
+It should contain image files with one of these extensions:
 
 ```text
 .png
@@ -512,158 +454,106 @@ check that the `captures/` directory contains:
 .jpeg
 ```
 
-image files.
-
 ---
 
 ## Email authentication fails
 
-If you receive an authentication error:
-
-1. Verify `SENDER_EMAIL`
-2. Verify `RECEIVER_EMAIL`
-3. Make sure you are using a **Gmail App Password**
-4. Make sure 2-Step Verification is enabled
-5. Make sure there are no accidental spaces or quotation marks in `.env`
-6. Generate a new App Password if necessary
-
-Do not use your normal Gmail account password.
-
----
-
-## `.env` accidentally appears in Git
-
-Stop before running:
-
-```bash
-git push
-```
-
 Check:
 
-```bash
-git status
-```
+1. Sender email address
+2. Recipient email address
+3. Gmail App Password
+4. Internet connection
+5. Gmail account security settings
+6. Environment-variable configuration
 
-If `.env` has already been committed, removing it from the folder is **not enough** because Git history may still contain the credential.
-
-Revoke the exposed Gmail App Password and create a new one.
-
----
-
-# 📂 Project Structure
-
-The recommended repository structure is:
-
-```text
-camera-capture-pdf-email/
-│
-├── main.py
-│
-├── requirements.txt
-│
-├── README.md
-│
-├── .gitignore
-│
-├── .env.example
-│
-├── captures/
-│   └── Generated images
-│
-└── output/
-    └── Generated PDF
-```
-
-The `captures/` and `output/` directories are generated during execution and should not normally be uploaded to GitHub.
+Do not use your normal Gmail password.
 
 ---
 
-# 🔒 Security
+# 🔒 Security Practices
 
-This project intentionally keeps sensitive information outside the Python source code.
+This project separates configuration from application code.
 
-Never commit:
+Sensitive information should never be committed to Git.
+
+Do not commit:
 
 ```text
 .env
 ```
 
-or any file containing:
+or files containing:
 
 ```text
-Gmail passwords
-App Passwords
+Passwords
+Gmail App Passwords
 API keys
 Private credentials
 ```
 
-The repository should contain only:
-
-```text
-.env.example
-```
-
-with placeholder values.
-
-For example:
-
-```text
-SENDER_EMAIL=your_sender@gmail.com
-RECEIVER_EMAIL=your_recipient@gmail.com
-EMAIL_PASSWORD=your_gmail_app_password
-```
+If a credential is accidentally pushed to a public repository, revoke it immediately and create a new credential.
 
 ---
 
-# 🚀 Future Improvements
+# 🚀 Possible Future Improvements
 
-Possible improvements for future versions include:
+The current system can be extended in several directions:
 
-* [ ] Add command-line arguments
-* [ ] Add timestamp information to images
-* [ ] Automatically delete old images
+* [ ] Run automatically at Raspberry Pi startup
+* [ ] Run as a background service
+* [ ] Add automatic image cleanup
+* [ ] Add timestamps to captured images
+* [ ] Add date-based PDF filenames
 * [ ] Add logging
-* [ ] Add configuration through a proper `.env` loader
+* [ ] Add configurable camera resolution
 * [ ] Add multiple email recipients
 * [ ] Add HTML email support
-* [ ] Add image resolution configuration
-* [ ] Add automatic scheduled execution
-* [ ] Add unit tests
-* [ ] Add a graphical user interface
-* [ ] Add automatic PDF naming based on date and time
+* [ ] Add automatic scheduling
+* [ ] Add remote monitoring
+* [ ] Add a web interface
+* [ ] Add failure notifications
+* [ ] Add automatic retry when the internet connection is unavailable
 
 ---
 
-# 📚 Technologies Used
+# 🧩 Applications
 
-This project is built using:
+The basic architecture can be adapted for:
 
-* **Python**
-* **OpenCV**
-* **img2pdf**
-* **SMTP**
-* **Gmail**
+* Automated document scanning
+* Periodic visual monitoring
+* Remote image collection
+* Automated note/document creation
+* Small IoT monitoring systems
+* Time-based photography
+* Remote data collection
 
-### Python Standard Library
+The Raspberry Pi provides the local processing and camera interface, while Wi-Fi enables communication with external services.
 
-The project also uses Python's built-in modules:
+---
+
+# 📚 Technical Summary
+
+This project demonstrates the integration of:
 
 ```text
-os
-time
-smtplib
-email
-pathlib
+Embedded Hardware
+       +
+Camera Interface
+       +
+Python Automation
+       +
+Image Processing
+       +
+PDF Generation
+       +
+Network Connectivity
+       +
+SMTP Email
 ```
 
----
-
-# 📜 License
-
-This project is provided for educational and personal use.
-
-If you intend to distribute or modify this project publicly, consider adding an open-source license such as the MIT License.
+It combines a low-power Raspberry Pi platform with Python software to create a compact automated system capable of capturing, processing, and remotely delivering image data.
 
 ---
 
@@ -675,6 +565,8 @@ GitHub: `https://github.com/YOUR_USERNAME`
 
 ---
 
-## ⭐ If You Find This Project Useful
+## 📜 License
 
-If this project helped you, consider giving the repository a ⭐ on GitHub.
+This project is intended for educational and personal use.
+
+If you plan to distribute the project publicly, consider adding an open-source license such as the **MIT License**.
