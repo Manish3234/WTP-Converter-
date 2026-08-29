@@ -2,6 +2,8 @@
 
 A Python automation project that captures images from a webcam at a fixed time interval, combines the captured images into a single PDF, and sends the PDF as an email attachment using Gmail SMTP.
 
+This project is designed to be simple to set up and can be adapted for applications such as automatic document capture, monitoring, note collection, and image-to-PDF workflows.
+
 ---
 
 ## 📌 Features
@@ -13,10 +15,13 @@ A Python automation project that captures images from a webcam at a fixed time i
 * 📧 Send the generated PDF through Gmail
 * 🔐 Keep email credentials outside the source code
 * ⚙️ Configure the application using environment variables
+* 🖥️ Works on Windows, macOS, and Linux with Python and a compatible webcam
 
 ---
 
-## 🔄 How the Program Works
+# 🔄 How the Program Works
+
+The program follows this workflow:
 
 ```text
              ┌──────────────┐
@@ -64,9 +69,9 @@ The application has three main stages:
 
 ---
 
-## 🛠️ Requirements
+# 🛠️ Requirements
 
-Before using the project, make sure you have:
+Before installing the project, make sure you have:
 
 * Python **3.10 or newer**
 * A working webcam
@@ -78,11 +83,95 @@ Before using the project, make sure you have:
 
 ---
 
-## 📧 Gmail Setup
+# 📥 Installation
+
+## 1. Clone the Repository
+
+Open PowerShell, Terminal, or Command Prompt and run:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/camera-capture-pdf-email.git
+```
+
+Then enter the project directory:
+
+```bash
+cd camera-capture-pdf-email
+```
+
+---
+
+## 2. Create a Virtual Environment
+
+Using a virtual environment keeps the project's Python packages separate from your system Python installation.
+
+### Windows
+
+```powershell
+python -m venv .venv
+```
+
+Activate it:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+If PowerShell blocks script execution, you can use Command Prompt instead:
+
+```cmd
+.venv\Scripts\activate
+```
+
+### macOS / Linux
+
+```bash
+python3 -m venv .venv
+```
+
+Activate it:
+
+```bash
+source .venv/bin/activate
+```
+
+After activation, your terminal should show something similar to:
+
+```text
+(.venv)
+```
+
+---
+
+# 📦 3. Install Dependencies
+
+With the virtual environment activated, run:
+
+```bash
+pip install -r requirements.txt
+```
+
+The project requires:
+
+```text
+opencv-python
+img2pdf
+```
+
+### What these packages do
+
+| Package         | Purpose                                 |
+| --------------- | --------------------------------------- |
+| `opencv-python` | Accesses the webcam and captures images |
+| `img2pdf`       | Converts the captured images into a PDF |
+
+---
+
+# 📧 Gmail Setup
 
 The application uses Gmail's SMTP server to send the generated PDF.
 
-### Create a Gmail App Password
+## 4. Create a Gmail App Password
 
 You need a Gmail **App Password**.
 
@@ -90,7 +179,13 @@ An App Password is different from your normal Gmail password and should be used 
 
 Make sure your Google account has **2-Step Verification enabled**.
 
-Create an App Password through your Google Account security settings.
+Then create an App Password through your Google Account security settings.
+
+Google will provide a password similar to:
+
+```text
+abcd efgh ijkl mnop
+```
 
 Keep this password private.
 
@@ -100,9 +195,17 @@ Keep this password private.
 
 Do not upload it to GitHub.
 
+Do not put it in:
+
+```text
+README.md
+main.py
+.env.example
+```
+
 ---
 
-## 🔐 Configure Email Credentials
+# 🔐 5. Configure Email Credentials
 
 Create a file named:
 
@@ -133,13 +236,21 @@ RECEIVER_EMAIL=recipient@gmail.com
 EMAIL_PASSWORD=your_gmail_app_password
 ```
 
+For example:
+
+```text
+SENDER_EMAIL=myemail@gmail.com
+RECEIVER_EMAIL=receiver@gmail.com
+EMAIL_PASSWORD=abcdefghijklmnop
+```
+
 Use your own credentials.
 
 ### 🚨 Do NOT commit `.env`
 
 The `.gitignore` file should prevent `.env` from being uploaded to GitHub.
 
-Before pushing your project, check:
+Check before committing:
 
 ```bash
 git status
@@ -149,9 +260,11 @@ Make sure `.env` does not appear as a file to be committed.
 
 ---
 
-## ⚙️ Configuration
+# ⚙️ Configuration
 
 The program can be configured using environment variables.
+
+The available settings are:
 
 | Variable                   |               Default | Description                          |
 | -------------------------- | --------------------: | ------------------------------------ |
@@ -168,17 +281,19 @@ The program can be configured using environment variables.
 
 ---
 
-## 🧪 Recommended Test Configuration
+# 🧪 Recommended Test Configuration
 
-For your first test, use a shorter capture interval:
+For your first test, you probably don't want to wait five minutes between photographs.
+
+Use:
 
 ```text
 CAPTURE_INTERVAL_SECONDS=5
 ```
 
-This captures an image approximately every **5 seconds**.
+This means the program will capture an image approximately every **5 seconds**.
 
-Once everything works, you can change it to:
+Once everything works, change it back to:
 
 ```text
 CAPTURE_INTERVAL_SECONDS=300
@@ -188,7 +303,7 @@ which is approximately **5 minutes**.
 
 ---
 
-## 📷 Camera Configuration
+# 📷 Camera Configuration
 
 By default, the program uses:
 
@@ -214,17 +329,17 @@ depending on which camera you want to use.
 
 ---
 
-## ▶️ Running the Program
+# ▶️ Running the Program
 
-Run:
+Once installation and configuration are complete, activate your virtual environment and run:
 
 ```bash
 python main.py
 ```
 
-The program will open a camera window.
+The program will display a camera window.
 
-You should see:
+You should see a message similar to:
 
 ```text
 ============================================================
@@ -238,7 +353,7 @@ The webcam feed will remain visible while the program is running.
 
 ---
 
-## ⏹️ Stopping the Program
+# ⏹️ Stopping the Program
 
 To stop image capture:
 
@@ -254,9 +369,9 @@ The program will then:
 
 ---
 
-## 📁 Output Files
+# 📁 Output Files
 
-Captured images are stored in:
+During execution, captured images are stored in:
 
 ```text
 captures/
@@ -283,9 +398,9 @@ The generated PDF is then attached to the email.
 
 ---
 
-## 📧 Email Workflow
+# 📧 Email Workflow
 
-After the PDF is created, the program connects to Gmail's SMTP server:
+After the PDF is created, the program connects to:
 
 ```text
 smtp.gmail.com
@@ -309,9 +424,9 @@ Email sent successfully.
 
 ---
 
-## 🧩 Example Configuration
+# 🧩 Complete Example
 
-A typical configuration could look like:
+A typical `.env` configuration could look like:
 
 ```text
 SENDER_EMAIL=your_email@gmail.com
@@ -329,7 +444,7 @@ EMAIL_SUBJECT=Captured Images PDF
 EMAIL_BODY=Please find the captured images attached.
 ```
 
-Then run:
+Then simply run:
 
 ```bash
 python main.py
@@ -337,9 +452,9 @@ python main.py
 
 ---
 
-## 🐛 Troubleshooting
+# 🐛 Troubleshooting
 
-### Camera does not open
+## Camera does not open
 
 If you see:
 
@@ -359,11 +474,11 @@ to:
 CAMERA_INDEX=1
 ```
 
-Also make sure another application is not currently using the webcam.
+Also make sure another application such as Zoom, Teams, or a browser is not currently using the webcam.
 
 ---
 
-### No images are being captured
+## No images are being captured
 
 Check:
 
@@ -377,11 +492,11 @@ For testing, use:
 CAPTURE_INTERVAL_SECONDS=5
 ```
 
-Make sure the camera window is active.
+Also make sure the camera window is active.
 
 ---
 
-### PDF is not created
+## PDF is not created
 
 If you see:
 
@@ -389,26 +504,84 @@ If you see:
 No captured images found.
 ```
 
-check that the `captures/` directory contains `.png`, `.jpg`, or `.jpeg` files.
+check that the `captures/` directory contains:
+
+```text
+.png
+.jpg
+.jpeg
+```
+
+image files.
 
 ---
 
-### Email authentication fails
+## Email authentication fails
 
-Check the following:
+If you receive an authentication error:
 
 1. Verify `SENDER_EMAIL`
 2. Verify `RECEIVER_EMAIL`
 3. Make sure you are using a **Gmail App Password**
 4. Make sure 2-Step Verification is enabled
-5. Check for accidental spaces in `.env`
+5. Make sure there are no accidental spaces or quotation marks in `.env`
 6. Generate a new App Password if necessary
 
-Do not use your normal Gmail password.
+Do not use your normal Gmail account password.
 
 ---
 
-## 🔒 Security
+## `.env` accidentally appears in Git
+
+Stop before running:
+
+```bash
+git push
+```
+
+Check:
+
+```bash
+git status
+```
+
+If `.env` has already been committed, removing it from the folder is **not enough** because Git history may still contain the credential.
+
+Revoke the exposed Gmail App Password and create a new one.
+
+---
+
+# 📂 Project Structure
+
+The recommended repository structure is:
+
+```text
+camera-capture-pdf-email/
+│
+├── main.py
+│
+├── requirements.txt
+│
+├── README.md
+│
+├── .gitignore
+│
+├── .env.example
+│
+├── captures/
+│   └── Generated images
+│
+└── output/
+    └── Generated PDF
+```
+
+The `captures/` and `output/` directories are generated during execution and should not normally be uploaded to GitHub.
+
+---
+
+# 🔒 Security
+
+This project intentionally keeps sensitive information outside the Python source code.
 
 Never commit:
 
@@ -425,57 +598,46 @@ API keys
 Private credentials
 ```
 
-The repository should contain:
+The repository should contain only:
 
 ```text
 .env.example
 ```
 
-with placeholder values only.
+with placeholder values.
 
----
-
-## 📂 Project Structure
+For example:
 
 ```text
-camera-capture-pdf-email/
-│
-├── main.py
-├── requirements.txt
-├── README.md
-├── .gitignore
-├── .env.example
-│
-├── captures/
-│   └── Generated images
-│
-└── output/
-    └── Generated PDF
+SENDER_EMAIL=your_sender@gmail.com
+RECEIVER_EMAIL=your_recipient@gmail.com
+EMAIL_PASSWORD=your_gmail_app_password
 ```
-
-The `captures/` and `output/` directories are generated during execution and should normally be excluded from GitHub.
 
 ---
 
-## 🚀 Future Improvements
+# 🚀 Future Improvements
 
-Possible improvements include:
+Possible improvements for future versions include:
 
 * [ ] Add command-line arguments
-* [ ] Add timestamps to captured images
+* [ ] Add timestamp information to images
 * [ ] Automatically delete old images
 * [ ] Add logging
-* [ ] Add proper `.env` loading
+* [ ] Add configuration through a proper `.env` loader
 * [ ] Add multiple email recipients
 * [ ] Add HTML email support
 * [ ] Add image resolution configuration
 * [ ] Add automatic scheduled execution
 * [ ] Add unit tests
 * [ ] Add a graphical user interface
+* [ ] Add automatic PDF naming based on date and time
 
 ---
 
-## 🧰 Technologies Used
+# 📚 Technologies Used
+
+This project is built using:
 
 * **Python**
 * **OpenCV**
@@ -484,6 +646,8 @@ Possible improvements include:
 * **Gmail**
 
 ### Python Standard Library
+
+The project also uses Python's built-in modules:
 
 ```text
 os
@@ -495,17 +659,22 @@ pathlib
 
 ---
 
-## 📜 License
+# 📜 License
 
 This project is provided for educational and personal use.
 
-If you plan to distribute or modify this project publicly, consider adding an open-source license such as the MIT License.
+If you intend to distribute or modify this project publicly, consider adding an open-source license such as the MIT License.
 
 ---
 
-## 👨‍💻 Author
+# 👨‍💻 Author
 
 **Your Name**
 
 GitHub: `https://github.com/YOUR_USERNAME`
 
+---
+
+## ⭐ If You Find This Project Useful
+
+If this project helped you, consider giving the repository a ⭐ on GitHub.
